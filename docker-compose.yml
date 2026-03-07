@@ -1,0 +1,96 @@
+services:
+  auth-service:
+    image: auth-service
+    build: 
+      context: ./services/auth-service/
+      dockerfile : Dockerfile.dev
+    container_name: auth-service
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      - mongodb
+    restart : unless-stopped
+    networks:
+      - e-commerce-app
+
+  order-service:
+    image: order-service
+    build: 
+      context: ./services/order-service/
+      dockerfile : Dockerfile.dev
+    container_name: order-service
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      - mongodb
+    restart : unless-stopped
+    networks:
+      - e-commerce-app
+
+  product-service:
+    image: product-service
+    build: 
+      context: ./services/product-service/
+      dockerfile : Dockerfile.dev
+    container_name: product-service
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongodb:27017/ecommerce
+    depends_on:
+      - mongodb
+    restart : unless-stopped
+    networks:
+      - e-commerce-app
+
+  frontend:
+    image: frontend
+    build: 
+      context: ./frontend/
+      dockerfile : Dockerfile.dev
+    container_name: frontend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - mongodb
+      - product-service
+      - auth-service
+      - order-service
+    restart : unless-stopped
+    networks:
+      - e-commerce-app
+  
+  mongodb:
+    image: mongodb/mongodb-atlas-local
+    hostname: mongodb
+    container_name : mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - db:/data/db
+      - configdb:/data/configdb
+      - mongot:/data/mongot
+    restart : unless-stopped
+    networks:
+      - e-commerce-app
+
+volumes:
+  db:
+  configdb:
+  mongot:
+
+networks:
+  e-commerce-app:
+    driver: bridge
+    external : true
