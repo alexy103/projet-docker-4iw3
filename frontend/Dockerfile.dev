@@ -1,0 +1,17 @@
+FROM node:20-alpine
+
+WORKDIR /opt/e-commerce/frontend
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+CMD .
+
+EXPOSE 8080
+
+CMD ["node", "server.cjs"]
