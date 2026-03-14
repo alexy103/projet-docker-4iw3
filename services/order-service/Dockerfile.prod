@@ -14,6 +14,4 @@ RUN chown -R app:app /opt/e-commerce
 
 USER app
 
-EXPOSE 3002
-
 CMD ["npm", "start"]
