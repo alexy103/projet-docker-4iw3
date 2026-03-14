@@ -4,6 +4,8 @@ services:
     build: 
       context: ./services/auth-service/
       dockerfile : Dockerfile.prod
+    env_file:
+      - .env.production
     environment:
       - NODE_ENV=production
       - MONGODB_URI=${MONGODB_URI}
@@ -25,6 +27,8 @@ services:
     build: 
       context: ./services/order-service/
       dockerfile : Dockerfile.prod
+    env_file:
+      - .env.production
     environment:
       - NODE_ENV=production
       - MONGODB_URI=${MONGODB_URI}
@@ -46,6 +50,8 @@ services:
     build: 
       context: ./services/product-service/
       dockerfile : Dockerfile.prod
+    env_file:
+      - .env.production
     environment:
       - NODE_ENV=production
       - MONGODB_URI=${MONGODB_URI}

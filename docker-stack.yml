@@ -3,6 +3,9 @@ services:
     image: alexy103/auth-service-prod:1
     env_file:
       - .env.production
+    secrets:
+      - source: jwt_secret
+        target: JWT_SECRET        
     networks:
       - e-commerce-app
     deploy:
@@ -14,6 +17,9 @@ services:
     image: alexy103/order-service-prod:1
     env_file:
       - .env.production
+    secrets:
+      - source: jwt_secret
+        target: JWT_SECRET
     networks:
       - e-commerce-app
     deploy:
@@ -60,3 +66,7 @@ volumes:
 networks:
   e-commerce-app:
     driver: overlay
+
+secrets:
+  jwt_secret:
+    external: true
