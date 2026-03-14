@@ -13,6 +13,12 @@ services:
     restart : unless-stopped
     networks:
       - e-commerce-app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   order-service:
     image: order-service-prod
@@ -28,6 +34,12 @@ services:
     restart : unless-stopped
     networks:
       - e-commerce-app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   product-service:
     image: product-service-prod
@@ -43,6 +55,12 @@ services:
     restart : unless-stopped
     networks:
       - e-commerce-app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   frontend:
     image: frontend-prod
