@@ -1,0 +1,81 @@
+services:
+  auth-service:
+    image: auth-service-prod
+    build: 
+      context: ./services/auth-service/
+      dockerfile : Dockerfile.prod
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart : unless-stopped
+    networks:
+      - e-commerce-app
+
+  order-service:
+    image: order-service-prod
+    build: 
+      context: ./services/order-service/
+      dockerfile : Dockerfile.prod
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart : unless-stopped
+    networks:
+      - e-commerce-app
+
+  product-service:
+    image: product-service-prod
+    build: 
+      context: ./services/product-service/
+      dockerfile : Dockerfile.prod
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart : unless-stopped
+    networks:
+      - e-commerce-app
+
+  frontend:
+    image: frontend-prod
+    build: 
+      context: ./frontend/
+      dockerfile : Dockerfile.prod
+    ports:
+      - "80:80"
+    depends_on:
+      - product-service
+      - auth-service
+      - order-service
+    restart : unless-stopped
+    networks:
+      - e-commerce-app
+  
+  mongodb:
+    image: mongo:8.2.5
+    volumes:
+      - db:/data/db
+    restart : unless-stopped
+    networks:
+      - e-commerce-app
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  db:
+
+networks:
+  e-commerce-app:
+    driver: bridge
