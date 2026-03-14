@@ -5,11 +5,11 @@ import { connectDB } from './config/database.js';
 import orderRoutes from './routes/orderRoutes.js';
 import fs from "fs";
 
-if (!process.env.JWT_SECRET) {
+dotenv.config();
+
+if (process.env.NODE_ENV !== "development") {
   process.env.JWT_SECRET = fs.readFileSync("/run/secrets/JWT_SECRET", "utf8").trim();
 }
-
-dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3002;
