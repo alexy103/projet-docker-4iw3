@@ -11,7 +11,8 @@ services:
       - NODE_ENV=development
       - MONGODB_URI=${MONGODB_URI}
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     restart : unless-stopped
     networks:
       - e-commerce-app
@@ -28,7 +29,8 @@ services:
       - NODE_ENV=development
       - MONGODB_URI=${MONGODB_URI}
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     restart : unless-stopped
     networks:
       - e-commerce-app
@@ -43,9 +45,10 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
-      - MONGODB_URI=mongodb://mongodb:27017/ecommerce
+      - MONGODB_URI=${MONGODB_URI}
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     restart : unless-stopped
     networks:
       - e-commerce-app
@@ -63,7 +66,6 @@ services:
     environment:
       - NODE_ENV=development
     depends_on:
-      - mongodb
       - product-service
       - auth-service
       - order-service
@@ -72,25 +74,26 @@ services:
       - e-commerce-app
   
   mongodb:
-    image: mongodb/mongodb-atlas-local
+    image: mongo:8.2.5
     hostname: mongodb
     container_name : mongodb
     ports:
       - 27017:27017
     volumes:
       - db:/data/db
-      - configdb:/data/configdb
-      - mongot:/data/mongot
     restart : unless-stopped
     networks:
       - e-commerce-app
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
 volumes:
   db:
-  configdb:
-  mongot:
 
 networks:
   e-commerce-app:
     driver: bridge
-    external : true
