@@ -14,8 +14,17 @@ services:
       mongodb:
         condition: service_healthy
     restart : unless-stopped
+    volumes:
+      - ./services/auth-service:/opt/e-commerce/services/auth-service
+      - auth-node-modules:/opt/e-commerce/services/auth-service/node_modules
     networks:
       - e-commerce-app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   order-service:
     image: order-service
@@ -32,8 +41,17 @@ services:
       mongodb:
         condition: service_healthy
     restart : unless-stopped
+    volumes:
+      - ./services/order-service:/opt/e-commerce/services/order-service
+      - order-node-modules:/opt/e-commerce/services/order-service/node_modules
     networks:
       - e-commerce-app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   product-service:
     image: product-service
@@ -50,8 +68,17 @@ services:
       mongodb:
         condition: service_healthy
     restart : unless-stopped
+    volumes:
+      - ./services/product-service:/opt/e-commerce/services/product-service
+      - product-node-modules:/opt/e-commerce/services/product-service/node_modules
     networks:
       - e-commerce-app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   frontend:
     image: frontend
@@ -93,6 +120,9 @@ services:
 
 volumes:
   db:
+  auth-node-modules:
+  order-node-modules:
+  product-node-modules:
 
 networks:
   e-commerce-app:
