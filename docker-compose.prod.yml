@@ -1,14 +1,11 @@
 services:
   auth-service:
-    image: auth-service
+    image: auth-service-prod
     build: 
       context: ./services/auth-service/
-      dockerfile : Dockerfile.dev
-    container_name: auth-service
-    ports:
-      - "3001:3001"
+      dockerfile : Dockerfile.prod
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - MONGODB_URI=${MONGODB_URI}
     depends_on:
       mongodb:
@@ -18,15 +15,12 @@ services:
       - e-commerce-app
 
   order-service:
-    image: order-service
+    image: order-service-prod
     build: 
       context: ./services/order-service/
-      dockerfile : Dockerfile.dev
-    container_name: order-service
-    ports:
-      - "3002:3002"
+      dockerfile : Dockerfile.prod
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - MONGODB_URI=${MONGODB_URI}
     depends_on:
       mongodb:
@@ -36,15 +30,12 @@ services:
       - e-commerce-app
 
   product-service:
-    image: product-service
+    image: product-service-prod
     build: 
       context: ./services/product-service/
-      dockerfile : Dockerfile.dev
-    container_name: product-service
-    ports:
-      - "3000:3000"
+      dockerfile : Dockerfile.prod
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - MONGODB_URI=${MONGODB_URI}
     depends_on:
       mongodb:
@@ -54,17 +45,12 @@ services:
       - e-commerce-app
 
   frontend:
-    image: frontend
+    image: frontend-prod
     build: 
       context: ./frontend/
-      dockerfile : Dockerfile.dev
-    container_name: frontend
+      dockerfile : Dockerfile.prod
     ports:
-      - "8080:8080"
-    env_file:
-      - .env
-    environment:
-      - NODE_ENV=development
+      - "80:80"
     depends_on:
       - product-service
       - auth-service
@@ -75,10 +61,6 @@ services:
   
   mongodb:
     image: mongo:8.2.5
-    hostname: mongodb
-    container_name : mongodb
-    ports:
-      - 27017:27017
     volumes:
       - db:/data/db
     restart : unless-stopped
