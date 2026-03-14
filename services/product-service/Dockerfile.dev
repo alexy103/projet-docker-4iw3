@@ -2,12 +2,20 @@ FROM node:20-alpine
 
 WORKDIR /opt/e-commerce/services/product-service
 
+RUN addgroup -S app && adduser -S app -G app
+
+RUN npm install -g nodemon
+
 COPY package*.json ./
 
 RUN npm install
 
 COPY . .
 
+RUN chown -R app:app /opt/e-commerce
+
+USER app
+
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["npx", "nodemon", "--watch", ".", "src/app.js"]

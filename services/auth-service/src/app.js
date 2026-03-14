@@ -3,6 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
+import fs from "fs";
+
+if (!process.env.JWT_SECRET) {
+  process.env.JWT_SECRET = fs.readFileSync("/run/secrets/JWT_SECRET", "utf8").trim();
+}
 
 dotenv.config();
 

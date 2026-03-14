@@ -1,0 +1,72 @@
+services:
+  auth-service:
+    image: alexy103/auth-service-prod:1
+    env_file:
+      - .env.production
+    secrets:
+      - source: jwt_secret
+        target: JWT_SECRET        
+    networks:
+      - e-commerce-app
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  order-service:
+    image: alexy103/order-service-prod:1
+    env_file:
+      - .env.production
+    secrets:
+      - source: jwt_secret
+        target: JWT_SECRET
+    networks:
+      - e-commerce-app
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  product-service:
+    image: alexy103/product-service-prod:1
+    env_file:
+      - .env.production
+    networks:
+      - e-commerce-app
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  frontend:
+    image: alexy103/frontend-prod:1
+    ports:
+      - "80:80"
+    networks:
+      - e-commerce-app
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  mongodb:
+    image: mongo:8.2.5
+    volumes:
+      - db:/data/db
+    networks:
+      - e-commerce-app
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+volumes:
+  db:
+
+networks:
+  e-commerce-app:
+    driver: overlay
+
+secrets:
+  jwt_secret:
+    external: true

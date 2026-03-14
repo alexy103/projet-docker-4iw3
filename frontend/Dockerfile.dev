@@ -2,6 +2,8 @@ FROM node:20-alpine
 
 WORKDIR /opt/e-commerce/frontend
 
+RUN addgroup -S app && adduser -S app -G app
+
 COPY package*.json ./
 
 RUN npm install
@@ -9,6 +11,10 @@ RUN npm install
 COPY . .
 
 RUN npm run build
+
+RUN chown -R app:app /opt/e-commerce
+
+USER app
 
 EXPOSE 8080
 
