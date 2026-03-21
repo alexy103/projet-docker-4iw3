@@ -133,7 +133,9 @@ docker service ls
 
 ### Pour la version de prod
 
-docker exec -it <frontend_container>
+```bash
+docker exec -it <frontend_container> sh
+```
 
 1. Auth
 
@@ -143,12 +145,19 @@ docker exec -it <frontend_container>
         curl -X POST http://auth-service:3001/api/auth/register -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password123"}'
         ```
 
+    - Connexion (si besoin)
+
+        ```bash
+        curl -X POST http://auth-service:3001/api/auth/login -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password123"}'
+        ```
+    
+
 2. Product
 
     - Récupération de la Liste des Produits
 
         ```bash
-        curl -X GET http://localhost:3000/api/products
+        curl -X GET http://product-service:3000/api/products
         ```
 
     - Ajout d'un Produit au Panier
