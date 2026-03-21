@@ -226,9 +226,34 @@ dockerfile front prod => creation d'un fichier de conf nginx
 
 
 
+## Synthèse
+
+Au cours de ce projet, nous avons du modifier quelques parties du code, comme la variable `VITE_PRODUCT_SERVICE_URL`, de cette façon :
+```bash
+avant
+VITE_PRODUCT_SERVICE_URL=http://127.0.0.1:3000
+
+après
+VITE_PRODUCT_SERVICE_URL=http://product-service:3000
+```
+
+Les conteneurs ne pouvaient pas communiquer entre eux sans cette modification ; de même pour la variable `MONGODB_URI` :
+```bash
+avant
+MONGODB_URI=mongodb://mongodb:27017
+
+après
+MONGODB_URI=mongodb://mongodb:27017/ecommerce
+```
+
+Nous avons également du créer un fichier de configuration Nginx.
+
+Évoqué plusieurs fois en cours, nous avons choisi d'utiliser Docker Swarm pour comprendre son fonctionnement. Tout le projet était déjà fonctionnel avant son intégration, ce qui l'a rendu assez naturelle et dans la continuité de ce que nous avions déjà produit.
 
 
 
+
+#
 
 
 
