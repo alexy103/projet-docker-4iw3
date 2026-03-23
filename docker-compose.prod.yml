@@ -1,6 +1,6 @@
 services:
   auth-service:
-    image: auth-service-prod
+    image: auth-service-prod:1
     build: 
       context: ./services/auth-service/
       dockerfile : Dockerfile.prod
@@ -25,7 +25,7 @@ services:
       start_period: 10s
 
   order-service:
-    image: order-service-prod
+    image: order-service-prod:1
     build: 
       context: ./services/order-service/
       dockerfile : Dockerfile.prod
@@ -50,7 +50,7 @@ services:
       start_period: 10s
 
   product-service:
-    image: product-service-prod
+    image: product-service-prod:1
     build: 
       context: ./services/product-service/
       dockerfile : Dockerfile.prod
@@ -73,7 +73,7 @@ services:
       start_period: 10s
 
   frontend:
-    image: frontend-prod
+    image: frontend-prod:1
     build: 
       context: ./frontend/
       dockerfile : Dockerfile.prod
